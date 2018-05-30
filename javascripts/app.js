@@ -1,7 +1,7 @@
 // Rover Object Goes Here
 // ======================
 
-//we create an array where each element is a rover, so we can play with many of them...
+//we create an array where each element is a rover, so we can play with many of them... (better with classes???)
 var rovers=[
   //rover 0
   {
@@ -33,22 +33,29 @@ var rovers=[
   id: "2"
 }];
 
-// it's where we play, we put the id of the rover at the first position.
+// it's where we play, we put some 'x' as obstacles.
 var grid=[
-  ["0", " ", " ", " ", "1", " ", " ", " ", " ", " "],
+  [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
   [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
   [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
   [" ", " ", "x", " ", " ", " ", " ", " ", " ", " "],
   [" ", " ", "x", " ", " ", " ", " ", " ", " ", " "],
-  [" ", " ", "x", " ", " ", "2", "x", " ", " ", " "],
+  [" ", " ", "x", " ", " ", " ", "x", " ", " ", " "],
   [" ", " ", " ", " ", " ", "x", " ", " ", " ", " "],
   [" ", " ", " ", " ", " ", "x", " ", " ", " ", " "],
   [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "],
   [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "]
 ];
 
-//keeps the current position of every rover. Must be initialized manually.
-var currentPositions=[[0,0],[0,4], [5,5]];
+for (var i=0; i<rovers.length; i++){
+  grid[rovers[i].positionX][rovers[i].positionY]=rovers[i].id;
+}
+
+//keeps the current position of every rover.
+var currentPositions=[];
+for (var i=0; i<rovers.length; i++){
+  currentPositions.push([rovers[i].positionX, rovers[i].positionY]);
+}
 
 
 
@@ -64,6 +71,7 @@ function checkPosition(x, y){
   return false;
 }
 
+//updates the direction when we turn left
 function turnLeft(rover){
   switch(rover.direction){
     case "N":
@@ -83,6 +91,7 @@ function turnLeft(rover){
   }
 }
 
+//updates the direction when we turn right
 function turnRight(rover){
   switch(rover.direction){
     case "N":
@@ -102,6 +111,7 @@ function turnRight(rover){
   }
 }
 
+//updates the position where we want to move one step forward if we are not at the edge of the array
 function moveForward(rover){
   var nextX=rover.positionX;
   var nextY=rover.positionY;
@@ -139,6 +149,7 @@ function moveForward(rover){
   move(nextX, nextY, rover);
 }
 
+//updates the position where we want to move one step backward if we are not at the edge of the array
 function moveBackward(rover){
   var nextX=rover.positionX;
   var nextY=rover.positionY;
@@ -176,8 +187,9 @@ function moveBackward(rover){
 }
 
 
-//cheks before the movement if there's an obstacle or another rover at the place we want to move
+//cheks, before the movement, if there's an obstacle or another rover at the place we want to move
 function move(nextX, nextY, rover){
+  console.log("Rover "+rover.id+" wants to move to x="+nextX+" y="+nextY);
   if (grid[nextX][nextY]==="x"){
     console.log("Obstacle found at "+nextX+", "+nextY+"... command skipped!!!");
     return;
@@ -187,7 +199,7 @@ function move(nextX, nextY, rover){
   }
   rover.positionX=nextX;
   rover.positionY=nextY;
-  console.log("Current position is x="+rover.positionX+" y="+rover.positionY);
+  console.log("Current position of rover "+rover.id+" is x="+rover.positionX+" y="+rover.positionY);
   rover.travelLog.push([rover.positionX, rover.positionY]);
   grid [rover.positionX][rover.positionY]=rover.id;
   currentPositions[rover.id][0]=rover.positionX;
@@ -228,9 +240,9 @@ function letsRock(rovers){
       }
     }
   }
-for (var i=0; i<rovers.length; i++){
-  console.log("The route of the rover "+rovers[i].id+" is "+rovers[i].travelLog); 
-}
+  for (var i=0; i<rovers.length; i++){
+    console.log("The route of the rover "+rovers[i].id+" is "+rovers[i].travelLog); 
+  }
 }
 
 letsRock(rovers);
